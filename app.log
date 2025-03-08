@@ -1,5 +1,0 @@
-2025-03-04 12:49:22,316 - ERROR - File does not exist.
-Traceback (most recent call last):
-  File "c:\Users\Lemon\Documents\rrc-polytech\courses\software-dev-fundamentals\modules\comp-1327-module-4-lecture-solution\module_4_demonstration_starter.py", line 26, in <module>
-    file = open('module_4_data.txt')
-FileNotFoundError: [Errno 2] No such file or directory: 'module_4_data.txt'

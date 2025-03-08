@@ -12,6 +12,7 @@ __version__ = "0.03.2025"
 import csv
 import os
 import logging
+from pprint import pprint
 
 logging.debug('Debug level message.')
 logging.info('Info level message.')
@@ -28,6 +29,8 @@ transaction_counter = 0
 total_transaction_amount = 0
 is_valid_record = True
 error_message = ''
+invalid_transaction_types = []
+
 
 # Clears the terminal
 os.system('cls' if os.name == 'nt' else 'clear')
@@ -53,6 +56,7 @@ try:
             # Reset valid record and error message for each iteration
             is_valid_record = True
             error_message = ''
+            validation_errors = []
 
             # Gets the customer ID from the first column
             customer_id = transaction[0]
@@ -61,17 +65,31 @@ try:
             transaction_type = transaction[1]
 
             ### VALIDATION 1 ###
+            if transaction_type not in valid_transaction_types:
+                print(f"Invalid transaction type: {transaction_type}")
+                validation_errors.append(f"Invalid transaction type: {transaction_type}")
+                invalid_transaction_types.append(transaction_type)
+                is_valid_record = False
 
             ### VALIDATION 2 ###
             # Gets the transaction amount from the third column
-            # + convert transaction amount to float
-            transaction_amount = float(transaction[2]) 
+            # convert transaction amount to float
+            transaction_amount = None
+            try:
+                transaction_amount = float(transaction[2]) 
 
-            if is_valid_record:
+            except ValueError as e:
+                print(f"Invalid transaction amount: {transaction[2]}")
+                validation_errors.append(f"Invalid transaction amount: {transaction[2]}")
+                is_valid_record = False
+
+            if is_valid_record and transaction_amount is not None:
+
                 # Initialize the customer's account balance if it doesn't 
                 # already exist
                 if customer_id not in customer_data:
                     customer_data[customer_id] = {'balance': 0, 'transactions': []}
+
                 # Update the customer's account balance based on the 
                 # transaction type
                 elif transaction_type == 'deposit':
@@ -89,8 +107,12 @@ try:
                     )
         
         ### COLLECT INVALID RECORDS ###
+            if not is_valid_record:
+                rejected_transactions.append((transaction, validation_errors))
+
+# catch FileNotFound, exit program
 except FileNotFoundError as e:
-    print(f"The bank Data file ({DATA_FILENAME}) Cannot be found.")
+    logging.error(f"The bank Data file ({DATA_FILENAME}) Cannot be found.")
     exit(1)
         
 report_title = "PiXELL River Transaction Report"
@@ -109,6 +131,9 @@ for customer_id, data in customer_data.items():
     for rejected_transaction in data['transactions']:
         amount, type = rejected_transaction
         print(f"{type.capitalize():>16}:{amount:>12}")
+
+# prettyprint rejected transactions
+pprint(rejected_transactions)
 
 average_transaction_amount = total_transaction_amount / transaction_counter
 print(f"AVERAGE TRANSACTION AMOUNT: {average_transaction_amount}")
