@@ -133,7 +133,7 @@ for customer_id, data in customer_data.items():
         print(f"{type.capitalize():>16}:{amount:>12}")
 
 # prettyprint rejected transactions
-pprint(rejected_transactions)
+# pprint(rejected_transactions)
 
 average_transaction_amount = total_transaction_amount / transaction_counter
 print(f"AVERAGE TRANSACTION AMOUNT: {average_transaction_amount}")
