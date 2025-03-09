@@ -84,6 +84,7 @@ try:
                 is_valid_record = False
 
             if is_valid_record and transaction_amount is not None:
+                transaction_counter += 1
 
                 # Initialize the customer's account balance if it doesn't 
                 # already exist
@@ -92,11 +93,11 @@ try:
 
                 # Update the customer's account balance based on the 
                 # transaction type
-                elif transaction_type == 'deposit':
+                if transaction_type == 'deposit':
                     customer_data[customer_id]['balance'] += transaction_amount
                     transaction_count += 1
                     total_transaction_amount += transaction_amount
-                elif transaction_type == 'withdrawal':
+                elif transaction_type == 'withdraw':
                     customer_data[customer_id]['balance'] += transaction_amount
                     transaction_count += 1
                     total_transaction_amount += transaction_amount
