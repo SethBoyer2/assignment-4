@@ -1,8 +1,5 @@
 """This module contains a program that reads through transaction records
 and reports the results.
-
-Example:
-    $ python pixell_transaction_report.py
 """
 
 __author__ = "Seth Boyer"
@@ -30,7 +27,6 @@ total_transaction_amount = 0
 is_valid_record = True
 error_message = ''
 invalid_transaction_types = []
-
 
 # Clears the terminal
 os.system('cls' if os.name == 'nt' else 'clear')
@@ -83,6 +79,7 @@ try:
                 validation_errors.append(f"Invalid transaction amount: {transaction[2]}")
                 is_valid_record = False
 
+            # if the record is valid and there is a transaction amount, increase counter.
             if is_valid_record and transaction_amount is not None:
                 transaction_counter += 1
 
@@ -133,11 +130,9 @@ for customer_id, data in customer_data.items():
         amount, type = rejected_transaction
         print(f"{type.capitalize():>16}:{amount:>12}")
 
-# prettyprint rejected transactions
-# pprint(rejected_transactions)
-
+# Calculate avg transaction amount and print with majestic two decimal place rounding. 
 average_transaction_amount = total_transaction_amount / transaction_counter
-print(f"AVERAGE TRANSACTION AMOUNT: {average_transaction_amount}")
+print(f"AVERAGE TRANSACTION AMOUNT: {average_transaction_amount:.2f}")
 
 rejected_report_title = "REJECTED RECORDS"
 print(rejected_report_title)
